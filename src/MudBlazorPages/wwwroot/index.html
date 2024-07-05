@@ -4,12 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gradudated Income Boost</title>
+    <title>Mega School</title>
     
     <!-- Adapted from https://stackoverflow.com/a/69769086/8435941 -->
     <script>
         var baseTag = document.createElement("base");
-        var appRoot = "/gib/";
+        var appRoot = "/iframe/";
         var path = document.location.pathname;
         baseTag.href = (path.indexOf(appRoot) === 0 || path + "/" === appRoot) ? appRoot : "/";
         document.head.appendChild(baseTag);
@@ -18,13 +18,13 @@
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="GIB.styles.css" rel="stylesheet" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/gib/icon-512.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/gib/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
 </head>
 
-<body>
+<body style="margin:0px;padding:0px;overflow:hidden">
     <div id="app">
         <svg class="loading-progress">
             <circle r="40%" cx="50%" cy="50%" />
