@@ -1,7 +1,11 @@
 ﻿@page "/"
+@implements IDisposable
 @using System.Web
+@using OneOf.Types
 @using iFrame.Components
+@using OneOf
 @inject NavigationManager NavigationManager
+@inject PersistentComponentState ApplicationState
 
 @if (!string.IsNullOrWhiteSpace(this.Url))
 {
@@ -11,6 +15,55 @@
 }
 
 @code {
+    private bool _pageLoaded = false;
+    private PersistingComponentStateSubscription _persistingSubscription;
+    private OneOf<PrerenderedState, None> _prerenderedState = new None();
+
     [SupplyParameterFromQuery(Name = "url")]
     public string? Url { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // remove placeholder UI
+        if (!_pageLoaded)
+        {
+            if ((_prerenderedState.IsT1 && firstRender) || (_prerenderedState.IsT0))
+            {
+                this.InvokeAsync(() =>
+                      {
+                          _pageLoaded = true;
+
+                          this.StateHasChanged();
+                      });
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _persistingSubscription = ApplicationState.RegisterOnPersisting(PersistComponentStateAsync);
+
+        if (!ApplicationState.TryTakeFromJson<PrerenderedState>("fetchdata", out var restored))
+        {
+            _prerenderedState = new None();
+        }
+        else
+        {
+            _prerenderedState = restored!;
+        }
+    }
+
+    private Task PersistComponentStateAsync()
+    {
+        ApplicationState.PersistAsJson("fetchdata", new PrerenderedState());
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        _persistingSubscription.Dispose();
+    }
+
+    private class PrerenderedState;
 }
